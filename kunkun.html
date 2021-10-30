@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* * {
+        color: rgb(74, 189, 189);
+      } */
+    </style>
+  </head>
+  <body>
+    <video src="./华强.mp4" style="width: 700px" id="video" controls></video>
+    <canvas width="700" height="600" id="canvas" style="border: 1px solid #000"
+      >不支持</canvas
+    >
+    <script>
+      let canvas = document.querySelector("#canvas");
+      let ctx = canvas.getContext("2d");
+      let video = document.querySelector("#video");
+      let time;
+      video.addEventListener("play", play);
+      video.addEventListener("pause", () => {
+        clearInterval(time);
+      });
+      function play() {
+        time = setInterval(() => {
+          ctx.drawImage(video, 0, 0, 700, 700);
+          let imgData = ctx.getImageData(0, 0, 700, 700);
+          ctx.clearRect(0, 0, 700, 600);
+          for (x = 0; x < 700; x += 6) {
+            for (y = 0; y < 700; y += 6) {
+              let index = x + y * 700; //把坐标信息转化成像素索引
+              //把像素所以转换成像素rgba
+              let r = imgData.data[index * 4 + 0];
+              let g = imgData.data[index * 4 + 1];
+              let b = imgData.data[index * 4 + 2];
+              let a = imgData.data[index * 4 + 3];
+              if (a > 128) {
+                ctx.beginPath();
+                //画方块（像素）
+                // ctx.fillRect(x, y, 1, 1);
+
+                // if (r == 255 && g == 255 && b == 255) {
+                //   ctx.fillStyle = "green";
+                //   ctx.font = "6px 微软雅黑";
+                // }
+                if (r == 155 && g == 155 && b == 155) {
+                  ctx.fillStyle = "green";
+                  ctx.font = "6px 微软雅黑";
+                } else {
+                  ctx.fillStyle = "#000";
+                  ctx.font = "8px 微软雅黑";
+                }
+                let text = Math.floor(Math.random() * 9 + 1);
+                ctx.fillText(text, x, y);
+                // ctx.fill();
+              }
+            }
+          }
+        }, 18);
+      }
+    </script>
+  </body>
+</html>

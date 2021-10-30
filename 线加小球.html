@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="900" height="900" style="border: 1px solid #000" id="canvas">
+      不支持！！！
+    </canvas>
+    <script>
+      /** @type {HTMLCanvasElement}*/
+      let canvas = document.querySelector("#canvas");
+      let ctx = canvas.getContext("2d");
+      function Ball() {
+        this.x = this.r(600); //[0,600)
+        this.y = this.r(800); //[0,800)
+        this.r = this.r(80) + 20; //[50,150)
+        this.color =
+          "#" +
+          ("00000" + ((Math.random() * 0x1000000) << 0).toString(16)).substr(
+            -6
+          );
+        this.xSpeed = Math.random() * 3 + 1;
+        this.ySpeed = Math.random() * 2 + 1;
+      }
+      //随机数字
+      Ball.prototype.r = function (num) {
+        return Math.random() * num;
+      };
+      //显示
+      Ball.prototype.show = function () {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      };
+      //运动检测
+      Ball.prototype.check = function () {
+        if (this.x + this.r >= canvas.width) {
+          this.xSpeed = -Math.abs(this.xSpeed);
+        } else if (this.x - this.r <= 0) {
+          this.xSpeed = Math.abs(this.xSpeed);
+        }
+        if (this.y + this.r >= canvas.height) {
+          this.ySpeed = -Math.abs(this.ySpeed);
+        } else if (this.y - this.r <= 0) {
+          this.ySpeed = Math.abs(this.ySpeed);
+        }
+      };
+      //小球动起来
+      Ball.prototype.move = function () {
+        this.check();
+        this.x = this.x + this.xSpeed;
+        this.y = this.y + this.ySpeed;
+        this.show();
+      };
+
+      let ballArr = [];
+      for (let i = 0; i < 4; i++) {
+        const ball = new Ball();
+        ballArr.push(ball);
+      }
+      setInterval(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ballArr.forEach((item, index) => {
+          item.move();
+          //画线
+          for (let j = 0; j < ballArr.length && j != index; j++) {
+            ctx.beginPath();
+            ctx.moveTo(item.x, item.y);
+            ctx.lineTo(ballArr[j].x, ballArr[j].y);
+            ctx.strokeStyle = item.color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+        });
+      }, 20);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="600" height="300" style="border: 1px solid #000" id="canvas">
+      不支持！！！
+    </canvas>
+    <script>
+      /** @type {HTMLCanvasElement} */
+      //得到canvas画布
+      let canvas = document.getElementById("canvas");
+      let ctx = canvas.getContext("2d");
+      ctx.strokeStyle = "red";
+      //   每次画圆圈的角度;
+      let count = 0;
+      let t = setInterval(() => {
+        if (count >= 360) {
+          clearInterval(t);
+          return;
+        }
+        count += 10;
+        ctx.beginPath();
+        ctx.arc(150, 150, 100, 0, (Math.PI / 180) * count, false);
+        ctx.stroke();
+      }, 18);
+    </script>
+  </body>
+</html>

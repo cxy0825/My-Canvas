@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="600" height="300" style="border: 1px solid #000" id="canvas">
+      不支持！！！
+    </canvas>
+    <script>
+      /** @type{HTMLCanvasElement}*/
+      let canvas = document.querySelector("#canvas");
+      let ctx = canvas.getContext("2d");
+      ctx.arc(100, 100, 80, 0, Math.PI + Math.PI * 0.5, false);
+      ctx.fillStyle = "gold";
+      ctx.fill();
+      ctx.stroke();
+      let deg = 0;
+      setInterval(() => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.clearRect(0, 0, 600, 600);
+        deg += 0.02;
+        ctx.translate(100, 100);
+        ctx.rotate(deg);
+        ctx.arc(0, 0, 80, 0, Math.PI + Math.PI * 0.5, false);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }, 18);
+    </script>
+  </body>
+</html>

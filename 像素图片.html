@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="600" height="600" id="canvas">不支持</canvas>
+    <script>
+      /** @type {HTMLCanvasElement} */
+      let canvas = document.querySelector("#canvas");
+      let ctx = canvas.getContext("2d");
+      let img = new Image();
+      img.src = "./2.png";
+      img.onload = show;
+      function show() {
+        ctx.drawImage(img, 0, 0);
+        let width = img.width;
+        let height = img.height;
+        // 获取图像颜色信息
+        let copy = ctx.getImageData(0, 0, width, height);
+        ctx.clearRect(0, 0, width, height);
+        // console.log(copy);
+        let step = 3;
+        for (x = 0; x < width; x += step) {
+          for (y = 0; y < height; y += step) {
+            let index = x + y * width; //把坐标信息转化成像素索引
+            //把像素所以转换成像素rgba
+            let r = copy.data[index * 4 + 0];
+            let g = copy.data[index * 4 + 1];
+            let b = copy.data[index * 4 + 2];
+            let a = copy.data[index * 4 + 3];
+            //去除半透明像素
+            if (a > 128) {
+              ctx.beginPath();
+              //画方块（像素）
+              ctx.fillRect(x, y, 1, 1);
+              if (r == 255 && g == 255 && b == 255) {
+                ctx.fillStyle = "#fff";
+              } else {
+                ctx.fillStyle = "#000";
+              }
+
+              ctx.fill();
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

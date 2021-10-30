@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="600" height="600" style="border: 1px solid #000" id="canvas">
+      不支持！！！
+    </canvas>
+    <script>
+      /** @type {HTMLCanvasElement} */
+      //得到canvas画布
+      let canvas = document.getElementById("canvas");
+      let ctx = canvas.getContext("2d");
+      ctx.fillStyle = "gold";
+      let w = canvas.width;
+      let h = canvas.height;
+      let x = 50;
+      let y = 50;
+      let r = 50;
+      let xSpeed = 3;
+      let ySpeed = 2;
+
+      setInterval(() => {
+        //   清除画板
+        ctx.clearRect(0, 0, w, h);
+        //x轴碰撞检测 如果碰到边缘的反方向运动
+        if (x + r >= w) {
+          xSpeed = -xSpeed;
+        } else if (x - r <= 0) {
+          xSpeed = Math.abs(xSpeed);
+        }
+        x = x + xSpeed;
+        //x轴碰撞检测 如果碰到边缘的反方向运动
+        if (y + r >= h) {
+          ySpeed = -ySpeed;
+        } else if (y - r <= 0) {
+          ySpeed = Math.abs(ySpeed);
+        }
+        y = y + ySpeed;
+        ball(x, y, r);
+      }, 18);
+
+      //定义小球
+      function ball(x, y, r) {
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="600" height="600" style="border: 1px solid #000" id="canvas">
+      不支持！！！
+    </canvas>
+    <script>
+      /** @type {HTMLCanvasElement} */
+      //得到canvas画布
+      let canvas = document.getElementById("canvas");
+      let ctx = canvas.getContext("2d");
+
+      //实线1
+      ctx.beginPath();
+      ctx.moveTo(300, 0);
+      ctx.lineTo(300, 600);
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+      //实线2
+      ctx.beginPath();
+      ctx.moveTo(0, 300);
+      ctx.lineTo(600, 300);
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+      //实线3
+      ctx.beginPath();
+      ctx.moveTo(600, 0);
+      ctx.lineTo(0, 600);
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+      //实线4
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(600, 600);
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+
+      //字
+      ctx.font = "400px 微软雅黑 bloder";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("米", 300, 300);
+    </script>
+  </body>
+</html>

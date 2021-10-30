@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="600" height="600" style="border: 1px solid #000" id="canvas">
+      不支持！！！
+    </canvas>
+    <script>
+      /** @type {HTMLCanvasElement} */
+      //得到canvas画布
+      let canvas = document.getElementById("canvas");
+      let ctx = canvas.getContext("2d");
+      ctx.fillStyle = "gold";
+      let w = canvas.width;
+      let h = canvas.height;
+      // 面向对象
+      function random(num) {
+        return Math.floor(Math.random() * num);
+      }
+
+      function Ball() {
+        this.r = 60 * Math.random() + 10; //[10,60)
+        this.x = random(w);
+        this.y = random(h);
+        this.color =
+          "rgb(" + random(255) + "," + random(255) + "," + random(255) + ")";
+        this.xSpeed = Math.random(3) + 2; //[2,5)
+        this.ySpeed = Math.random(3) + 1; //[1,4)
+      }
+      //定义小球显示
+      Ball.prototype.show = function () {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      };
+      //定义小球的碰撞检测
+      Ball.prototype.check = function () {};
+      //定义小球的运动
+      Ball.prototype.move = function () {
+        //x坐标
+        if (this.x + this.r >= canvas.width) {
+          this.xSpeed = -Math.abs(this.xSpeed);
+        } else if (this.x - this.r <= 0) {
+          this.xSpeed = Math.abs(this.xSpeed);
+        }
+        this.x = this.x + this.xSpeed;
+        //y坐标
+        if (this.y + this.r >= canvas.height) {
+          this.ySpeed = -Math.abs(this.ySpeed);
+        } else if (this.y - this.r <= 0) {
+          this.ySpeed = Math.abs(this.ySpeed);
+        }
+        this.y = this.y + this.ySpeed;
+      };
+
+      //创建一个数组
+      let ballArr = [];
+      for (let i = 0; i < 5; i++) {
+        var ball = new Ball();
+        ballArr.push(ball);
+        ball.show();
+      }
+      //小球运动
+      setInterval(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < ballArr.length; i++) {
+          let ball = ballArr[i];
+          ball.move();
+          ball.show();
+
+          // console.log(ball);
+        }
+      }, 18);
+    </script>
+  </body>
+</html>

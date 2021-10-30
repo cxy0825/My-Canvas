@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="600" height="600" style="border: 1px solid #000" id="canvas">
+      不支持！！！
+    </canvas>
+    <script>
+      /** @type {HTMLCanvasElement} */
+      //得到canvas画布
+      let canvas = document.getElementById("canvas");
+      let ctx = canvas.getContext("2d");
+      let img = new Image();
+      img.src = "./1.png";
+      img.onload = function () {
+        console.log(img.width, img.height);
+        //1.ctx.drawImage(图片，放置的x坐标，放置的y坐标)
+        // ctx.drawImage(img, 0, 0);
+        //2.ctx.drawImage(图片，放置的x坐标，放置的y坐标，规定的宽度，规定的高度)
+        // ctx.drawImage(img, 0, 0, 600, 600);
+        //2.ctx.drawImage(图片，开始裁剪的X坐标，开始裁剪的y坐标，裁剪的宽度，裁剪的高度，图像放置的x坐标，图像放置的y坐标，规定图像的宽度，规定图像的高度)
+        ctx.drawImage(img, 0, 0, 200, 200, 0, 0, 500, 500);
+      };
+    </script>
+  </body>
+</html>

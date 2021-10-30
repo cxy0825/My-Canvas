@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas width="600" height="300" style="border: 1px solid #000;" id="canvas">
+        不支持！！！
+    </canvas>
+    <script>
+        // canvas动画的思路是清屏-更新-渲染
+        /** @type {HTMLCanvasElement} */
+        let canvas = document.querySelector("#canvas")
+        let ctx = canvas.getContext('2d')
+        ctx.fillStyle = "bule";
+        //信号量
+        let left = 100;
+        //动画过程
+        setInterval(() => {
+            //清除画布，clearRect(开始x坐标，开始y坐标，清除的宽度，清除的高度)
+            ctx.clearRect(0,0,600,600)
+            left++
+            ctx.fillRect(left,100,100,100)
+        }, 20);
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas width="600" height="300" style="border: 1px solid #000;" id="canvas">
+        不支持！！！
+    </canvas>
+    <script>
+        // 因为canvas不能得到已经上屏的对象，所以我们要维持对象的状态。在canvas动画中，我们都使用面向对象
+        //因此我们可以使用面向对象的方式维持canvas需要的属性和状态
+        /** @type {HTMLCanvasElement} */
+        let canvas = document.querySelector("#canvas")
+        let ctx = canvas.getContext('2d')
+        function Rect(x,y,w,h,color){
+            this.x = x
+            this.y = y
+            this.w = w
+            this.h = h
+            this.color = color
+        }
+        //更新方法
+        Rect.prototype.update = function(){
+            this.x++
+        }
+        //渲染
+        Rect.prototype.render = function(){
+            //设置颜色
+            ctx.fillStyle = this.color;
+            //设置颜色
+            ctx.fillRect(this.x,this.y,this.w,this.h)
+        }
+        // 实例化
+        let r1 = new Rect(100,100,50,50,"purple")
+        //动画过程
+        setInterval(() => {
+            ctx.clearRect(0,0,600,600);
+            //更新
+            r1.update();
+            //渲染
+            r1.render()
+        }, 20);
+        
+        // ctx.fillStyle = "bule";
+        // //信号量
+        // let left = 100;
+        // //动画过程
+        // setInterval(() => {
+        //     //清除画布，clearRect(开始x坐标，开始y坐标，清除的宽度，清除的高度)
+        //     ctx.clearRect(0,0,600,600)
+        //     left++
+        //     ctx.fillRect(left,100,100,100)
+        // }, 20);
+    </script>
+</body>
+</html>
