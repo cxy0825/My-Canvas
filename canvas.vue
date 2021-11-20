@@ -66,7 +66,7 @@ export default {
   },
   created() {
     //获取数据
-    //this.getdata();
+    this.getdata();
   },
   mounted() {
     let time;
