@@ -74,33 +74,7 @@ export default {
     let that = this;
     canvas = this.$refs.canvas;
     let ctx = canvas.getContext("2d");
-    //创建一个绘画扇形的类
-    class _arc {
-      constructor(x, y, r, star, end) {
-        //鼠标是否在图形内 true表示正在变大，false表示变大后进行缩小
-        this.flag = false;
-        this.x = x;
-        this.y = y;
-        this.r = r;
-        this.star = star;
-        this.end = end;
-        this.color =
-          "rgb(" +
-          Math.floor(Math.random() * 256) +
-          "," +
-          Math.floor(Math.random() * 256) +
-          "," +
-          Math.floor(Math.random() * 256) +
-          ")";
-      }
-      arc() {
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.arc(this.x, this.y, this.r, this.star, this.end, false);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-      }
-    }
+
     let star = 0;
     //创建元素的个数
     for (let i = 0; i < this.list.length; i++) {
