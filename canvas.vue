@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas width="600" height="600" ref="canvas" class="canvas"></canvas>
+    <canvas width="1000" height="1000" ref="canvas" class="canvas"></canvas>
   </div>
 </template>
 <script>
@@ -13,10 +13,12 @@ export default {
       ctx: null, //用来存放画笔对象
       time: null, //用来存放定时器的返回值
       alist: [], //用来存放实例
-      list: [0.2, 0.2, 0.3, 0.3], //存放要绘制的数据的大小
-      listTip: ["第一", "第二", "第三", "第四"],
-      bigsize: 80,
+      list: [], //存放要绘制的数据的大小
+      listTip: ["第一", "第二", "第三", "第四", "第五", "第六", "第七", "第八"],
+      bigsize: 240,
+      bisesize: 200,
       num: 5, //请求的数量
+      temp: "",
     };
   },
   methods: {
@@ -74,6 +76,35 @@ export default {
           self.ctx.fillStyle = this.color;
           self.ctx.fill();
         }
+        rect() {
+          self.ctx.beginPath();
+          self.ctx.fillRect(10, 20 + 50 * this.index, 60, 40);
+          self.ctx.font = "24px 微软雅黑";
+          self.ctx.fillText(self.listTip[this.index], 80, 50 + 50 * this.index);
+        }
+        line() {
+          self.ctx.beginPath();
+          //旋转然后划线
+          let rotate = (this.end - this.star).toFixed(2);
+          self.ctx.save();
+          self.ctx.translate(this.x, this.y);
+          self.ctx.rotate(this.star + rotate / 2);
+          self.ctx.moveTo(0, 0);
+          self.ctx.lineTo(300, 0);
+          self.ctx.lineWidth = 3;
+          self.ctx.strokeStyle = this.color;
+          self.ctx.stroke();
+          self.ctx.restore();
+          //写字
+          self.ctx.save();
+          self.ctx.translate(this.x, this.y);
+          self.ctx.rotate(this.star + rotate / 2);
+          self.ctx.translate(310, 0);
+          self.ctx.rotate(-this.star - rotate / 2);
+          self.ctx.font = "30px 微软雅黑";
+          self.ctx.fillText(self.listTip[this.index], 10, 20);
+          self.ctx.restore();
+        }
       }
       return new _arc();
     },
@@ -82,7 +113,7 @@ export default {
       let star = 0;
       for (let i = 0; i < this.list.length; i++) {
         let end = Math.PI * 2 * this.list[i];
-        let a = this._creatarc([300, 300, 70, star, end + star]);
+        let a = this._creatarc([500, 500, 200, star, end + star]);
         star += end;
         // 添加编号
         a.index = i;
@@ -95,12 +126,14 @@ export default {
       this.ctx.clearRect(0, 0, 10000, 10000);
       this.alist.forEach((value) => {
         value.arc();
+        value.rect();
+        value.line();
       });
     },
     //鼠标是否在元素内部
     ispos(e) {
       //获取这个位置的像素rgb值，如果颜色值一样就说明鼠标在元素内
-      let img = this.ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
+      let img = this.ctx.getImageData(e.offsetX * 2, e.offsetY * 2, 1, 1);
       //过滤背景色黑色
       if (img.data[0] != 0 && img.data[1] != 0 && img.data[2] != 0) {
         //如果获取到的颜色和对象的颜色一样，那么就说明鼠标在元素内
@@ -117,7 +150,7 @@ export default {
         return -1;
       }
     },
-    //改变 两个基础大小变量
+    //改变
     change(i, x, y, _this) {
       if (
         (i != -1 || i != undefined) &&
@@ -128,7 +161,7 @@ export default {
         clearInterval(this.time);
         _this.alist.forEach((value) => {
           value.flag = false;
-          value.r = 70;
+          value.r = 200;
         });
         _this.alist[i].flag = true;
         //变大
@@ -137,13 +170,13 @@ export default {
         //变成鼠标
         canvas.style.cursor = "auto";
         _this.alist.forEach((value, i) => {
-          if (value.r > 70) {
+          if (value.r > 200) {
             //停止动画
             clearInterval(_this.time);
             //重新设定flag
             value.flag = false;
             _this.ctx.clearRect(0, 0, 10000, 10000);
-            value.r = 70;
+            value.r = 200;
             _this.draw();
           }
         });
@@ -156,12 +189,13 @@ export default {
       _this.time = setInterval(() => {
         _this.alist[i].r = _this.alist[i].r + (_this.bigsize - 70) / 10;
         _this.ctx.clearRect(0, 0, 10000, 10000);
+        _this.temp = _this.alist[i].color;
         _this.draw();
         _this.ctx.fillStyle = "rgba(0,0,0,.4)";
-        _this.ctx.fillRect(x + 20, y, 60, 30);
+        _this.ctx.fillRect(x * 2 + 20, y * 2, 100, 40);
         _this.ctx.fillStyle = "white";
-        _this.ctx.font = "16px 微软雅黑";
-        _this.ctx.fillText(_this.alist[i].title, x + 30, y + 20);
+        _this.ctx.font = "26px 微软雅黑";
+        _this.ctx.fillText(_this.alist[i].title, x * 2 + 30, y * 2 + 30);
         // 限制变大的幅度
         if (_this.alist[i].r >= _this.bigsize) {
           _this.alist[i].r = _this.bigsize;
@@ -190,6 +224,7 @@ export default {
     function move(e) {
       //是否在元素内部
       let index = this.ispos(e, this);
+      //鼠标移入
       this.change(index, e.offsetX, e.offsetY, this);
     }
   },
@@ -208,10 +243,11 @@ export default {
   padding: 0;
   margin: 0;
 }
+
 .canvas {
+  width: 500px;
+  height: 500px;
   border: 1px solid royalblue;
   background-color: rgb(255, 255, 255);
-  width: 600px;
-  height: 600px;
 }
 </style>
