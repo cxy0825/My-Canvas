@@ -113,7 +113,7 @@ export default {
       let star = 0;
       for (let i = 0; i < this.list.length; i++) {
         let end = Math.PI * 2 * this.list[i];
-        let a = this._creatarc([500, 500, 200, star, end + star]);
+        let a = this._creatarc([500, 500, this.bisesize, star, end + star]);
         star += end;
         // 添加编号
         a.index = i;
@@ -161,7 +161,7 @@ export default {
         clearInterval(this.time);
         _this.alist.forEach((value) => {
           value.flag = false;
-          value.r = 200;
+          value.r = _this.bisesize;
         });
         _this.alist[i].flag = true;
         //变大
@@ -170,13 +170,13 @@ export default {
         //变成鼠标
         canvas.style.cursor = "auto";
         _this.alist.forEach((value, i) => {
-          if (value.r > 200) {
+          if (value.r > _this.bisesize) {
             //停止动画
             clearInterval(_this.time);
             //重新设定flag
             value.flag = false;
             _this.ctx.clearRect(0, 0, 10000, 10000);
-            value.r = 200;
+            value.r = _this.bisesize;
             _this.draw();
           }
         });
