@@ -1,18 +1,7 @@
 let time = null; //用来存放定时器的返回值
 let alist = []; //用来存放实例
 let list = []; //存放要绘制的数据的大小
-let listTip = [
-  "足球",
-  "棒球",
-  "乒乓球",
-  "排球",
-  "篮球",
-  "台球",
-  "板球",
-  "高尔夫球",
-  "橄榄球",
-  "网球",
-];
+let listTip = ["第一", "第二", "第三", "第四", "第五", "第六", "第七", "第八"];
 let bigsize = 240;
 let bisesize = 200;
 let num = 5; //请求的数量
@@ -52,6 +41,14 @@ function getdata() {
       arc();
       draw();
       canvas.addEventListener("mousemove", move);
+      canvas.onclick = function (e) {
+        let index = ispos(e, this);
+        temp = alist[index].color;
+        alist[index].color = "rgb(255,0,0)";
+        ctx.clearRect(0, 0, 10000, 10000);
+        draw();
+        alist[index].color = temp;
+      };
     });
 }
 //创建一个绘画扇形的类
