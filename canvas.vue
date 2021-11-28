@@ -19,6 +19,7 @@ export default {
       bisesize: 200,
       num: 5, //请求的数量
       temp: "",
+      I: null, //选中的索引
     };
   },
   methods: {
@@ -141,7 +142,12 @@ export default {
           "rgb(" + img.data[0] + "," + img.data[1] + "," + img.data[2] + ")";
         for (let i = 0; i < this.alist.length; i++) {
           if (rgb == this.alist[i].color) {
-            return i;
+            if (i != this.I) {
+              this.I = i;
+              return i;
+            } else {
+              return i;
+            }
           }
         }
       }
@@ -164,6 +170,7 @@ export default {
           value.r = _this.bisesize;
         });
         _this.alist[i].flag = true;
+
         //变大
         _this.big(i, x, y, _this);
       } else if (i == -1 || i == undefined) {
@@ -189,7 +196,6 @@ export default {
       _this.time = setInterval(() => {
         _this.alist[i].r = _this.alist[i].r + (_this.bigsize - 70) / 10;
         _this.ctx.clearRect(0, 0, 10000, 10000);
-        _this.temp = _this.alist[i].color;
         _this.draw();
         _this.ctx.fillStyle = "rgba(0,0,0,.4)";
         _this.ctx.fillRect(x * 2 + 20, y * 2, 100, 40);
@@ -201,7 +207,7 @@ export default {
           _this.alist[i].r = _this.bigsize;
           clearInterval(_this.time);
         }
-      }, 18);
+      }, 10);
     },
   },
   created() {
@@ -220,12 +226,22 @@ export default {
       canvas.height / 2
     );
     canvas.addEventListener("mousemove", move.bind(this));
+    canvas.onclick = c.bind(this);
     //鼠标移动事件
     function move(e) {
       //是否在元素内部
       let index = this.ispos(e, this);
       //鼠标移入
       this.change(index, e.offsetX, e.offsetY, this);
+    }
+    function c(e) {
+      //是否在元素内部
+      let index = this.ispos(e, this);
+      this.temp = this.alist[index].color;
+      this.alist[index].color = "rgb(255,0,0)";
+      this.ctx.clearRect(0, 0, 10000, 10000);
+      this.draw();
+      this.alist[index].color = this.temp;
     }
   },
   watch: {
