@@ -1,10 +1,22 @@
 let time = null; //用来存放定时器的返回值
 let alist = []; //用来存放实例
 let list = []; //存放要绘制的数据的大小
-let listTip = ["第一", "第二", "第三", "第四", "第五", "第六", "第七", "第八"];
-let bigsize = 240;
-let bisesize = 200;
-let num = 4; //请求的数量
+let listTip = [
+  "精灵球",
+  "大师球",
+  "中级球",
+  "高级球",
+  "橄榄球",
+  "深水球",
+  "束缚球",
+  "洞穴球",
+  "国王球",
+];
+const x = 900;
+const y = 900;
+let bigsize = 360;
+let bisesize = 300;
+let num = 5; //请求的数量
 let temp = "";
 let selectI = -1; //哪一个被选中 -1代表没有被鼠标选中
 let canvas = document.querySelector(".canvas");
@@ -13,6 +25,11 @@ ctx.fillStyle = "red";
 ctx.textAlgin = "center";
 ctx.font = "24px 微软雅黑";
 ctx.fillText("正在获取数据中....", canvas.width / 2 - 80, canvas.height / 2);
+//自动执行 随机添加数组
+for (let i = 0; i < num; i++) {
+  let rand = Math.ceil(Math.random() * 100 + 1);
+  listTip.push(rand + "类球");
+}
 
 getdata();
 
@@ -72,13 +89,26 @@ class _arc {
       this.r = bigsize;
       this.color = this.hover;
       canvas.style.cursor = "pointer";
+      ctx.fillStyle = this.color;
+      ctx.fill();
+      //移入显示数字
+      ctx.font = "28px 微软雅黑";
+      ctx.fillStyle = "rgb(255,255,0)";
+      let data = 100 * list[this.index];
+      ctx.fillText(
+        listTip[this.index] + " " + data.toFixed(2) + "%",
+        x - 50,
+        y - 10
+      );
+      //还原填充颜色
+      ctx.fillStyle = this.color;
     } else {
       this.r = bisesize;
       this.color = this.color1;
       canvas.style.cursor = "auto";
+      ctx.fillStyle = this.color;
+      ctx.fill();
     }
-    ctx.fillStyle = this.color;
-    ctx.fill();
   }
   rect() {
     ctx.beginPath();
@@ -86,80 +116,53 @@ class _arc {
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.font = "24px 微软雅黑";
-    ctx.fillText(listTip[this.index], 80, 50 + 50 * this.index);
+    let data = 100 * list[this.index];
+    ctx.fillText(
+      listTip[this.index] + "    占" + data.toFixed(2) + "%",
+      80,
+      50 + 50 * this.index
+    );
   }
   line() {
     ctx.beginPath();
-    //旋转然后划线
+    //获取饼状图的弧度大小
     let rotate = (this.end - this.star).toFixed(2);
-    ctx.save();
-    ctx.translate(this.x, this.y);
+    //获取饼状图的中心的弧度
     let ro = (this.star + rotate / 2).toFixed(2);
-    let ro2 = ((360 * ro) / 6.28).toFixed(0);
-    ctx.rotate(this.star + rotate / 2);
-    ctx.moveTo(0, 0);
-    ctx.lineTo(300, 0);
+    let x1, y1;
+    ctx.moveTo(this.x, this.y);
+    y1 = (bisesize + 150) * Math.sin(ro);
+    x1 = (bisesize + 150) * Math.cos(ro);
+    ctx.lineTo(x1 + this.x, y1 + this.y);
+    //第四象限
+    if (x1 > 0 && y1 > 0) {
+      //绘制指向
+      ctx.lineTo(x1 + this.x + 40, y1 + this.y);
+      ctx.font = "30px 微软雅黑";
+      //绘制文字
+      ctx.fillText(listTip[this.index], x1 + this.x + 50, y1 + this.y);
+    }
+    //第三象限
+    else if (x1 < 0 && y1 > 0) {
+      ctx.lineTo(x1 + this.x - 40, y1 + this.y);
+      ctx.font = "30px 微软雅黑";
+      ctx.fillText(listTip[this.index], x1 + this.x - 120, y1 + this.y + 10);
+    }
+    //第二象限
+    else if (x1 < 0 && y1 < 0) {
+      ctx.lineTo(x1 + this.x - 40, y1 + this.y);
+      ctx.font = "30px 微软雅黑";
+      ctx.fillText(listTip[this.index], x1 + this.x - 140, y1 + this.y + 10);
+    }
+    //第一象限
+    else if (x1 > 0 && y1 < 0) {
+      ctx.lineTo(x1 + this.x + 40, y1 + this.y);
+      ctx.font = "30px 微软雅黑";
+      ctx.fillText(listTip[this.index], x1 + this.x + 50, y1 + this.y);
+    }
     ctx.lineWidth = 3;
     ctx.strokeStyle = this.color;
     ctx.stroke();
-    if (0 <= ro2 && ro2 < 90) {
-      ctx.beginPath();
-      ctx.arc(340, 0, 40, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.restore();
-      //写字
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.star + rotate / 2);
-      ctx.translate(325, 0);
-      ctx.rotate(-this.star - rotate / 2);
-      ctx.font = "30px 微软雅黑";
-      ctx.fillText(listTip[this.index], -20, 20);
-      ctx.restore();
-    } else if (90 <= ro2 && ro2 < 180) {
-      ctx.beginPath();
-      ctx.arc(340, 0, 40, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.restore();
-      //写字
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.star + rotate / 2);
-      ctx.translate(320, 0);
-      ctx.rotate(-this.star - rotate / 2);
-      ctx.font = "30px 微软雅黑";
-      ctx.fillText(listTip[this.index], -40, 20);
-      ctx.restore();
-    } else if (180 <= ro2 && ro2 < 270) {
-      ctx.beginPath();
-      ctx.arc(340, 0, 40, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.restore();
-      //写字
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.star + rotate / 2);
-      ctx.translate(325, 0);
-      ctx.rotate(-this.star - rotate / 2);
-      ctx.font = "30px 微软雅黑";
-      ctx.fillText(listTip[this.index], -40, 0);
-      ctx.restore();
-    } else if (270 <= ro2 && ro2 <= 360) {
-      ctx.beginPath();
-      ctx.arc(340, 0, 40, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.restore();
-      ctx.restore();
-      //写字
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.star + rotate / 2);
-      ctx.translate(325, 0);
-      ctx.rotate(-this.star - rotate / 2);
-      ctx.font = "30px 微软雅黑";
-      ctx.fillText(listTip[this.index], -20, 6);
-      ctx.restore();
-    }
   }
 }
 
@@ -168,7 +171,7 @@ function arc() {
   let star = 0;
   for (let i = 0; i < list.length; i++) {
     let end = Math.PI * 2 * list[i];
-    let a = new _arc(500, 500, bisesize, star, end + star);
+    let a = new _arc(x, y, bisesize, star, end + star);
     star += end;
     // 添加编号
     a.index = i;
@@ -187,9 +190,13 @@ function draw(x, y) {
     } else {
       value.arc(x, y);
     }
-
     value.line();
     value.rect(x, y);
+    if (x == undefined && y == undefined) {
+      value.arc();
+    } else {
+      value.arc(x, y);
+    }
   });
 }
 
